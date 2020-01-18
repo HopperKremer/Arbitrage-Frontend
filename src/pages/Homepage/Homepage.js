@@ -5,8 +5,9 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import PriceTicker from './PriceTicker';
-import About from './About';
+import PriceTicker from '../PriceTicker/PriceTickerPage';
+import About from '../About/AboutPage';
+import LogPage from '../LogPage/LogPage';
 
 export default function Homepage() {
     return (
@@ -17,7 +18,7 @@ export default function Homepage() {
               <Link to="/">Home</Link>
              </li>
              <li>
-              <Link to="/about">About</Link>
+              <Link to="/logs">Logs</Link>
              </li>             
              <li>
               <Link to="/ticker">Ticker Feed</Link>
@@ -25,8 +26,8 @@ export default function Homepage() {
           </ul>
           <hr />
           <Switch>
-            <Route path = '/About'>
-              <About/>
+            <Route path = '/logs'>
+              <LogPage/>
             </Route>
             <Route path = "/ticker">
               <PriceTicker/>
