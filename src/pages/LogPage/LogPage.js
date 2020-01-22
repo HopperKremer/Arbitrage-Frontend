@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
-import './LogPage.css';
+import React, { useState } from 'react';
 import autobahn from 'autobahn-browser';
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-
 import TextField from '@material-ui/core/TextField';
 
+import './LogPage.css';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,48 +20,22 @@ const connection = new autobahn.Connection({
     url: 'ws://pcw.vapesear.ch/ws',
     realm: 'pdubscryptoworld'
 });
-  
+
 connection.open();
 
 function LogPage() {
 
   const classes = useStyles();
+  const name = 'Logs';
+  const [logs, setLogs] = useState("Blank");
 
-  const [name, setName] = React.useState('Cat in the Hat');
-  const [logs, setLogs] = useState([]);
+  const appendToLogs = (message) => {
+    setLogs(oldLogs => message + "\n" + oldLogs);
+  }
 
-  const handleChange = event => {
-    setName(event.target.value);
-  };
-
-  
   connection.onopen = function (session) {
     session.subscribe('com.pdubscryptoworld.logs', (args) => {
-      setLogs(prevLogs => {
-        const newLog = args[0]['message'];
-        let newLogs = prevLogs;
-        let match_found = false;
-        console.log(newLog);
-
-        for (let i = 0; i < newLogs.length; i++) {
-          if (newLogs[i] === undefined) {
-            newLogs = [];
-            break;
-          }
-
-          if (newLogs[i]['message'] === newLog['message']) {
-            newLogs[i] = newLog;
-            break;
-          }
-        }
-
-        if (!match_found) {
-          newLogs = [...newLogs, newLog];
-        }
-
-        return [...newLogs]
-
-      });
+      appendToLogs(args[0]['message']);
     });
   };
 
@@ -75,7 +48,6 @@ function LogPage() {
               multiline
               label={name}
               value={logs}
-              onChange={handleChange}
               variant="outlined"
             />
         </form>
